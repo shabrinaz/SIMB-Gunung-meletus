@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard - Sistem Manajemen Bencana Gunung Meletus</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+
+    <!--CSS Canvas-->
+    <style type="text/css">
+    #map {
+      width: 1428px;
+      height: 500px;
+    } 
+  </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow border-top border-3 border-primary sticky-top p-0 fixed-top">
+        <a href="index.html" class="navbar-brand bg-primary d-flex align-items-center px-4 px-lg-5">
+            <h2 class="mb-2 text-white">SIMB</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Halaman Utama</a>
+                <a href="infografis.html" class="nav-item nav-link active">Infografis</a>
+                <a href="service.html" class="nav-item nav-link">Berita</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Data</a>
+                    <div class="dropdown-menu fade-up m-0">
+                        <a href="price.html" class="dropdown-item">Data Orang Hilang</a>
+                        <a href="feature.html" class="dropdown-item">Pengaduan</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link">Kontak</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <main id="" class="justify-content-center">
+        <div class="container p-1">
+        <section class="">
+            <!-- Peta Persebaran -->
+            <div class="row pt-5 justify-content-center">
+                <div class="col-lg-12">
+                    <div class="card p-4">
+                        <h5 class="card-title">Persebaran Gunung Berapi di Indonesia</h5>
+                        <div class="row">
+                            <div id='map'></div>
+                            <div class="legend mt-3">
+                              <h6>Legenda:</h6>
+                              <div class="legend-item">
+                                  <img src="https://img.icons8.com/?size=100&id=myaoOzvr7FYJ&format=png&color=000000" alt="Gunung Tipe A" style="width: 20px; height: 20px;">
+                                  <span style="margin-left: 5px;">Gunung Tipe A</span>
+                              </div>
+                              <div class="legend-item">
+                                  <img src="https://img.icons8.com/?size=100&id=HamSt2Nt97FW&format=png&color=000000" alt="Gunung Tipe B" style="width: 20px; height: 20px;">
+                                  <span style="margin-left: 5px;">Gunung Tipe B</span>
+                              </div>
+                          </div>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grafik Line Erupsi -->
+            <div class="row pt-5">
+            <div class="col-lg-6">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Grafik Erupsi Gunung Berapi (2019-2023)</h5>
+                      <!-- Line Chart -->
+                      <div id="reportsChart"></div>
+    
+                      <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                          new ApexCharts(document.querySelector("#reportsChart"), {
+                            series: [{
+                              name: 'Jumlah Kejadian',
+                              data: [7, 7, 1, 1, 4],
+                            }, ],
+                            chart: {
+                              height: 350,
+                              type: 'area',
+                              toolbar: {
+                                show: false
+                              },
+                            },
+                            markers: {
+                              size: 4
+                            },
+                            colors: ['#D81F24'],
+                            fill: {
+                              type: "gradient",
+                              gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.3,
+                                opacityTo: 0.4,
+                                stops: [0,90,120]
+                              }
+                            },
+                            dataLabels: {
+                              enabled: false
+                            },
+                            stroke: {
+                              curve: 'smooth',
+                              width: 2
+                            },
+                            
+                            xaxis: {
+                              type: 'categories',
+                              categories: ["2019", "2020", "2021", "2022", "2023"]
+                            },
+                            tooltip: {
+                              x: {
+                                format: 'yyyy'
+                              },
+                            }
+                          }).render();
+                        });
+                      </script>
+                      <!-- End Line Chart -->
+    
+                </div>
+              </div>
+            </div>
+    
+            <!-- Grafik Batang 10 gunung -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title">10 Negara Gunung Berapi Aktif Terbanyak</h5>
+      
+                    <!-- Bar Chart -->
+                    <canvas id="barChart" style="min-height: 350px;"></canvas>
+                    <script>
+                      document.addEventListener("DOMContentLoaded", () => {
+                        new Chart(document.querySelector('#barChart'), {
+                          type: 'bar',
+                          data: {
+                            labels: ['Indonesia', 'Jepang', 'Amerika Serikat', 'Rusia', 'Chili', 'Papua Nugini', 'Ekuador', 'Tonga', 'Islandia', 'Perancis'],
+                            datasets: [{
+                              label: 'Total Gunung',
+                              data: [58, 44, 42, 33, 19, 15, 11, 11, 9, 9],
+                              backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 205, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(201, 203, 207, 0.2)'
+                              ],
+                              borderColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(255, 159, 64)',
+                                'rgb(255, 205, 86)',
+                                'rgb(75, 192, 192)',
+                                'rgb(54, 162, 235)',
+                                'rgb(153, 102, 255)',
+                                'rgb(201, 203, 207)'
+                              ],
+                              borderWidth: 1
+                            }]
+                          },
+                          options: {
+                            scales: {
+                              y: {
+                                beginAtZero: true
+                              }
+                            }
+                          }
+                        });
+                      });
+                    </script>
+                    <!-- End Bar CHart -->
+      
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tipe Gunung di Indonesia -->
+            <div class="col-lg-12 pt-4 align-content-center">
+                <div class="card">
+                     <div class="card-body">
+                        <h5 class="card-title">Jumlah Tipe Gunung Berapi<span> </h5>
+                        <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+                            <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                echarts.init(document.querySelector("#trafficChart")).setOption({
+                                tooltip: {
+                                    trigger: 'item'
+                                },
+                                legend: {
+                                    top: '5%',
+                                    left: 'center'
+                                },
+                                series: [{
+                                    name: 'Jumlah',
+                                    type: 'pie',
+                                    radius: ['40%', '70%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                    show: false,
+                                    position: 'center'
+                                    },
+                                    emphasis: {
+                                    label: {
+                                        show: true,
+                                        fontSize: '18',
+                                        fontWeight: 'bold'
+                                    }
+                                    },
+                                    labelLine: {
+                                    show: false
+                                    },
+                                    data: [{
+                                        value: 110,
+                                        name: 'Gunung Berapi Tipe A'
+                                    },
+                                    {
+                                        value: 30,
+                                        name: 'Gunung Berapi Tipe B'
+                                    },
+                                    {
+                                        value: 21,
+                                        name: 'Gunung Berapi Tipe C'
+                                    },
+                                    ]
+                                }]
+                                });
+                            });
+                            </script>
+                        </div>
+                </div>
+            </div>  
+
+          </div>
+        </section>
+        </div>
+      </main>
+    
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 6rem;">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-6 col-md-6">
+                    <h4 class="text-light mb-4">Tentang PVMBG</h4>
+                    <p class="mb-2"><i></i>Pusat Vulkanologi & Mitigasi Bencana Geologi (PVMBG) bertugas memantau gunung berapi, mitigasi bencana, penelitian vulkanologi di Indonesia, memberikan peringatan dini dan rekomendasi tindakan untuk mengurangi risiko bencana vulkanik.</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Hubungi Kami</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Gedung A.F Lasut VII Jl. Diponegoro No.57, Cihaur Geulis, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40122</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>(022) 7272606</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>pvmbg@esdm.go.id</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href="twitter.com/vulkanologi_mbg"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="facebook.com/pvmbg"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="www.youtube.com/@pvmbgtv"><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="instagram.com/pvmbg_kesdm"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Pelayanan</h4>
+                    <a class="btn btn-link" href="index.html">Dashboard</a>
+                    <a class="btn btn-link" href="infografis.html">Infografis</a>
+                    <a class="btn btn-link" href="">Berita</a>
+                    <a class="btn btn-link" href="">Dataset</a>
+                </div>
+                
+        
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script type="text/javascript">
+    var locationsTipeA = [
+        ["Seulawah Agam", 5.44702799423, 95.65666357510],
+        ["Peut Sague", 4.90260907364, 96.28886262270],
+        ["Burni Telong", 4.76699474587, 96.82422668750],
+        ["Sinabung", 3.16990478798, 98.39104079350],
+        ["Sorik Marapi", 0.68578083721, 99.53632632020],
+        ["Marapi", -0.39106938431, 100.45709783400],
+        ["Tandikat", -0.43149002318, 100.31930043300],
+        ["Talang", -0.98009431698, 100.68045592500],
+        ["Kerinci", -1.69600133075, 101.26719098600],
+        ["Dempo", -4.01589423144, 103.12147339500],
+        ["Kaba", -3.51553828928, 102.62655686200],
+        ["Anak Krakatau", -6.10281411180, 105.42279349400],
+        ["Sumbing", -7.38332572046, 110.07362347100],
+        ["Salak", -6.71808392296, 106.71332889100],
+        ["Gede", -6.78780520782, 106.98227635300],
+        ["Tangkuban Parahu", -6.75989611757, 107.61522922700],
+        ["Guntur", -7.15559026474, 107.85128253800],
+        ["Papandayan", -7.31692882707, 107.73163717600],
+        ["Galunggung", -7.25761749787, 108.07749047700],
+        ["Ciremai", -6.89549040517, 108.40772635400],
+        ["Slamet", -7.24179442577, 109.21492422500],
+        ["Dieng", -7.21834490284, 109.90657246200],
+        ["Sundoro", -7.30152746249, 109.99698988900],
+        ["Merapi", -7.54130669258, 110.44627086700],
+        ["Kelud", -7.93758770809, 112.30416030800],
+        ["Arjuno Welirang", -7.73356906885, 112.57470943800],
+        ["Bromo", -7.94286107829, 112.95296573100],
+        ["Semeru", -8.11284536216, 112.92476270100],
+        ["Lamongan", -7.98168729768, 113.34046210200],
+        ["Raung", -8.12016250449, 114.05603294200],
+        ["Ijen", -8.05856205262, 114.24257388400],
+        ["Batur", -8.24040140101, 115.37790509900],
+        ["Agung", -8.34397911664, 115.50748172600],
+        ["Rinjani/Barujari", -8.41111052321, 116.42315870100],
+        ["Tambora", -8.24697274644, 117.99320452900],
+        ["Sangeangapi", -8.19782498118, 119.06935408100],
+        ["Inielika", -8.74059061980, 120.97648297700],
+        ["Inierie", -8.87822584587, 120.95603807700],
+        ["Ebulobo", -8.81614007774, 121.19132482700],
+        ["Kelimutu", -8.76596982677, 121.81489824500],
+        ["Iya", -8.89476772331, 121.63871907400],
+        ["Rokatenda", -8.33308635188, 121.70676532500],
+        ["Egon", -8.67836769967, 122.45390510900],
+        ["Lewotobi Laki-laki", -8.53809642487, 122.76735601700],
+        ["Lewotobi Perempuan", -8.55199369915, 122.78017164500],
+        ["Lereboleng", -8.36834213189, 122.83577480100],
+        ["Ili boleng", -8.34340364512, 123.25237005700],
+        ["Ili Lewotolok", -8.27365858894, 123.50839824200],
+        ["Ili Werung", -8.53177212482, 123.57359121400],
+        ["Batutara", -7.78981002007, 123.58749176100],
+        ["Sirung", -8.49808398629, 124.13108916300],
+        ["Hobal (BL)", -8.55441771413, 123.63934820300],
+        ["Anak Ranakah", -8.63377912320, 120.53308095100],
+        ["Wetar", -6.63649643341, 126.65895075200],
+        ["Nieuwerkerk (BL)", -6.43341659386, 125.24242141400],
+        ["Wurlali", -7.12114375943, 128.68386935200],
+        ["Teon", -6.96242569240, 129.14368874400],
+        ["Nila", -6.75094593406, 129.51673556000],
+        ["Serua", -6.31267860732, 130.01658862600],
+        ["Banda api", -4.52305613948, 129.87964853800],
+        ["Dukono", 1.69867327144, 127.87801665200],
+        ["Ibu", 1.49240853814, 127.63367032400],
+        ["Gamkonora", 1.37722274125, 127.53252854700],
+        ["Gamalama", 0.80968953907, 127.33235803800],
+        ["Kie Besi", 0.32282408388, 127.39804101700],
+        ["Colo", -0.17045578507, 121.60249188900],
+        ["Ambang", 0.74896086924, 124.42201525600],
+        ["Soputan", 1.11450902998, 124.73778996900],
+        ["Lokon", 1.36385149090, 124.79921791900],
+        ["Mahawu", 1.35276358069, 124.86265913000],
+        ["Tangkoko", 1.51479631622, 125.18535631600],
+        ["Ruang", 2.30390854986, 125.36703101000],
+        ["Karangetang", 2.77702218568, 125.40609511700],
+        ["Awu", 3.68155345760, 125.45405395900],
+        ["Banua Wuhu (BL)", 3.04934859187, 125.67069124700],
+        ["Sangir (BL)", 3.61809900354, 124.59981757800]
+    ];
+
+    var locationsTipeB = [
+        ["Burni Geureudong", 4.79325406997, 96.82046024780],
+        ["Sibayak", 3.23965826450, 98.50450672840],
+        ["Pusuk Bukit", 2.61433296194, 98.66811206610],
+        ["Talamau", 0.07393294702, 99.98020206460],
+        ["Sibual-buali", 1.55411558773, 99.25591520290],
+        ["Sumbing", -2.41153128229, 101.72532182300],
+        ["Kunyit", -2.27864521740, 101.48260742800],
+        ["Belirang Beriti", -2.82682862652, 102.16446161400],
+        ["Bukit Daun", -3.38335491998, 102.37288686800],
+        ["Lumut Balai", -4.22359765749, 103.62319238800],
+        ["Sekincau Belirang", -5.09901333734, 104.34500913600],
+        ["Rajabasa", -5.78091676175, 105.63158934700],
+        ["Pulosari", -6.33953778034, 105.97502720000],
+        ["Karang", -6.26860623181, 106.04971873000],
+        ["Patuha", -7.16637656972, 107.40212624800],
+        ["Wayang Windu", -7.20697305508, 107.63771194900],
+        ["Talaga Bodas", -7.21096284884, 108.06520080000],
+        ["Ungaran", -7.20270943084, 110.33935738800],
+        ["Merbabu", -7.44747624415, 110.43868124400],
+        ["Lawu", -7.63760694142, 111.19024585200],
+        ["Wilis", -7.79026265880, 111.63259570400],
+        ["Iyang Argopuro", -7.96497795687, 113.57303323000],
+        ["Ilimuda", -8.47691485720, 122.76143614600],
+        ["Ili labalekan", -8.54194937570, 123.38180549800],
+        ["Yersey (BL)", -7.65198644389, 123.66904297100],
+        ["Emperor of China (BL)", -6.80439524053, 124.54049030400],
+        ["Manuk", -5.54294652983, 130.30387754600],
+        ["Todoko", 1.26277729560, 127.48225508200],
+        ["Sempu", 1.13541978818, 124.75145963000],
+        ["Klabat", 1.45340874820, 125.03010377100]
+    ];
+
+
+    var map = L.map('map').setView([-2.987551055057657, 112.97135226373759], 6);
+    mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+    L.tileLayer(
+        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+    // Definisikan ikon kustom
+    var mountainIconA = L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=myaoOzvr7FYJ&format=png&color=000000', // Ganti URL ini dengan URL ikon Anda
+        iconSize: [25, 25], // Ukuran ikon
+        iconAnchor: [16, 32], // Titik jangkar untuk penempatan
+        popupAnchor: [0, -32] // Titik di mana pop-up muncul
+    });
+
+    //Definisikan ikon kustom B
+    var mountainIconB = L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=HamSt2Nt97FW&format=png&color=000000', // Ganti URL ini dengan URL ikon Anda
+        iconSize: [25, 25], // Ukuran ikon
+        iconAnchor: [16, 32], // Titik jangkar untuk penempatan
+        popupAnchor: [0, -32] // Titik di mana pop-up muncul
+    });
+
+    // Tambahkan marker dengan ikon kustom A
+    for (var i = 0; i < locationsTipeA.length; i++) {
+        L.marker([locationsTipeA[i][1], locationsTipeA[i][2]], { icon: mountainIconA })
+            .bindPopup(locationsTipeA[i][0])
+            .addTo(map);
+    }
+
+    //Tambahkan marker dengan ikon kustom B
+    for (var i = 0; i < locationsTipeA.length; i++) {
+        L.marker([locationsTipeB[i][1], locationsTipeB[i][2]], { icon: mountainIconB })
+            .bindPopup(locationsTipeB[i][0])
+            .addTo(map);
+    }
+</script>
+</body>
+
+</html>
